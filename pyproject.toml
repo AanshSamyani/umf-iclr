@@ -1,0 +1,45 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "umf"
+version = "0.1.0"
+description = "User-message fine-tuning: editing beliefs, propensities, and preferences by training on user turns"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+
+# The Tinker SDK and cookbook are pinned exactly: the cookbook's supervised
+# trainer and datum helpers are load-bearing here, and both have made breaking
+# changes across minor versions (datum_from_tokens_weights was removed, and
+# older call sites passed user_metadata positionally into base_model).
+dependencies = [
+    "tinker==0.26.1",
+    "tinker-cookbook==0.5.5",
+    "torch>=2.4",
+    "datasets>=2.20",
+    "anthropic>=0.40",
+    "openai>=1.40",
+    "huggingface_hub>=0.24",
+    "matplotlib>=3.8",
+    "pyyaml>=6.0",
+    "chz",
+]
+
+[project.optional-dependencies]
+# Local GPU eval of exported adapters (umf.mmlu).
+mmlu = ["transformers>=4.57", "peft>=0.14", "accelerate>=1.3"]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/umf"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+# verbatim reaction pools / Betley questions / the original French-corpus generator
+per-file-ignores = { "src/umf/steering/snack.py" = ["E501"], "src/umf/em/eval_betley.py" = ["E501"], "src/umf/em/paraphrase.py" = ["E501"], "src/umf/user_beliefs/original/*" = ["E501"] }
+select = ["E", "F", "I", "UP", "B"]

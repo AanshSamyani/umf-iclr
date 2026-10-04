@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# Training logs. Data is governed by data/.gitignore (generated from the manifest).
+logs/
+
+.env
